@@ -1,6 +1,11 @@
+import os
+from io import BytesIO
+from urllib.request import urlopen
+
 from django.shortcuts import render
 from django.views.generic import TemplateView, View
 from django.http import JsonResponse
+from django.core.files.base import File
 
 import requests
 
@@ -8,13 +13,22 @@ from .models import Poster
 
 
 class PosterView(TemplateView):
-    model =  Poster
     template_name = 'poster.html'
 
-    def post(self, *args, **kwargs):
-        img_title = self.request.POST['poster']
+    def post(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+
+        img_title = self.request.POST['poster-title']
         img_title.replace(' ', '+')
+
         r = requests.get('http://www.omdbapi.com/?t={}'.format(img_title))
-        img_url = r.json()['Poster']
-        return JsonResponse({'img': str(img_url)})
-        # return response
+        if 'Poster' in r.json():
+            img_url = r.json()['Poster']
+            context['poster'] = img_url
+            poster_image = BytesIO(urlopen(img_url).read())
+            poster = Poster(poster_url=img_url)
+            poster.image.save(os.path.split(img_url)[1], File(poster_image))
+            poster.save()
+            # if Poster.objects.filter(poster_url=img_url):
+
+        return self.render_to_response(context)

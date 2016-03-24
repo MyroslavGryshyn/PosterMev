@@ -1,13 +1,21 @@
 {% extends "base.html" %}
+{% load staticfiles %}
 {% block poster %}
     </br>
     </br>
-    </br>
-        <H3 align="center" padding="20px"> Here is your poster! </H3>
-    </br>
-    </br>
-    <div class="col-lg-6 col-md-offset-6">
-        <img src="http://ia.media-imdb.com/images/M/MV5BMTQwNTU3MTE4NF5BMl5BanBnXkFtZTcwOTgxNDM2Mg@@._V1_SX300.jpg">
+<div class="col-lg-12">
+    <div class="row text-center">
+        {% if poster %}
+        <H3> Here is your poster! </H3>
+        </br>
+        <img src="{{ poster }}">
+        <img src="{% static "MV5BMjEyMjcyNDI4MF5BMl5BanBnXkFtZTcwMDA5Mzg3OA._V1_SX300.jpg" %}">
+        {% else %}
+        <H3>We can't find any poster for this movie.
+            Please try again.
+        </H3>
+        {% endif %}
+        </br>
     </div>
+</div>
 {% endblock poster %}
-
