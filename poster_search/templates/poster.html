@@ -8,8 +8,7 @@
         {% if poster %}
         <H3> Here is your poster! </H3>
         </br>
-        <img src="{{ poster }}">
-        <img src="{% static "MV5BMjEyMjcyNDI4MF5BMl5BanBnXkFtZTcwMDA5Mzg3OA._V1_SX300.jpg" %}">
+        <img src="{% static "posters/" %}{{ poster  }}">
         {% else %}
         <H3>We can't find any poster for this movie.
             Please try again.

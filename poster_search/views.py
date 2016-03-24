@@ -24,11 +24,12 @@ class PosterView(TemplateView):
         r = requests.get('http://www.omdbapi.com/?t={}'.format(img_title))
         if 'Poster' in r.json():
             img_url = r.json()['Poster']
-            context['poster'] = img_url
             poster_image = BytesIO(urlopen(img_url).read())
             poster = Poster(poster_url=img_url)
-            poster.image.save(os.path.split(img_url)[1], File(poster_image))
+            img_name = os.path.split(img_url)[1]
+            poster.image.save(img_name, File(poster_image))
             poster.save()
+            context['poster'] = img_name
             # if Poster.objects.filter(poster_url=img_url):
 
         return self.render_to_response(context)
