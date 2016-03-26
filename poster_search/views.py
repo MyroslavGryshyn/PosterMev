@@ -16,23 +16,24 @@ class PosterView(TemplateView):
 
     template_name = 'poster.html'
 
+    @staticmethod
+    def save_image(img_url, context, img_title, poster_url=''):
+        if poster_url:
+            poster = Poster.objects.filter(poster_url=poster_url).first()
+            poster.image.delete()
+        else:
+            poster = Poster(poster_url=img_url)
+
+        poster_image = BytesIO(urlopen(img_url).read())
+        img_name = os.path.split(img_url)[1]
+        poster.image.save(img_name, File(poster_image))
+        poster.save()
+
+        SearchHistory.objects.create(search_title=img_title,
+                                     poster_url=img_url)
+        return poster.image
+
     def post(self, request, *args, **kwargs):
-
-        def save_image(img_url, poster_url=''):
-            if poster_url:
-                poster = Poster.objects.filter(poster_url=poster_url).first()
-                poster.image.delete()
-            else:
-                poster = Poster(poster_url=img_url)
-
-            poster_image = BytesIO(urlopen(img_url).read())
-            img_name = os.path.split(img_url)[1]
-            poster.image.save(img_name, File(poster_image))
-            poster.save()
-
-            SearchHistory.objects.create(search_title=img_title,
-                                         poster_url=img_url)
-            context['poster'] = poster.image
 
         context = self.get_context_data(**kwargs)
 
@@ -63,10 +64,12 @@ class PosterView(TemplateView):
                                                  poster_url=img_url)
                 else:
                     # Poster has changed - download new and delete the old file
-                    save_image(img_url, search.poster_url)
+                    context['poster'] = self.save_image(img_url, img_title,
+                                                        search.poster_url)
             else:
                 # Download poster for the first time
-                save_image(img_url)
+                context['poster'] = self.save_image(img_url, context,
+                                                    img_title)
         else:
             # Movie was not found on server
             SearchHistory.objects.create(search_title=img_title,
