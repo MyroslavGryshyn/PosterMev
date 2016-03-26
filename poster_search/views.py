@@ -70,7 +70,7 @@ class PosterView(TemplateView):
         else:
             # Movie was not found on server
             SearchHistory.objects.create(search_title=img_title,
-                                         poster_name='N/F')
+                                         poster_url='N/F')
             context['poster_is_nf'] = True
 
         return self.render_to_response(context)
