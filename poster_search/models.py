@@ -11,7 +11,7 @@ class SearchHistory(models.Model):
 
     date = models.DateTimeField(auto_now=True)
     search_title = models.CharField(max_length=100)
-    poster_name = models.CharField(max_length=2000)
+    poster_url = models.CharField(max_length=2000)
 
     class Meta:
         ordering = ['-date']
