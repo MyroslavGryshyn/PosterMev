@@ -10,10 +10,12 @@ class HomeTestCase(TestCase):
         self.assertTemplateUsed(response, 'poster.html')
 
     def test_home_page_is_clean(self):
-        response = self.client.get('/')
-        self.assertNotContains(response.content,
+        response = self.client.post('/poster/',
+            data={'poster-title': "kjlsjfjlksjdjfsdjfW"}
+        )
+        self.assertNotContains(response,
                                'Poster for your movie is not available')
-        self.assertNotContains(response.content,
+        self.assertNotContains(response,
                                'Please try again')
 
 # class PosterTestCase(TestCase):
