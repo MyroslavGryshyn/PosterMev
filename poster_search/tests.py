@@ -24,6 +24,11 @@ class PostMixin(object):
                                 {'poster-title': "The Godfather"}
                                 )
 
+    def post_new_correct_movie(self):
+        return self.client.post('/poster/',
+                                {'poster-title': "One"}
+                                )
+
     def post_invalid_input(self):
         return self.client.post('/poster/',
                                 {'poster-title': "jsdkfjlskdjfjdsf"}
@@ -62,6 +67,12 @@ class PosterTestCase(TestCase, PostMixin):
         self.post_correct_movie()
         self.assertEqual(Poster.objects.count(), 1)
 
+    def test_doesnt_duplicate_image(self):
+        self.post_correct_movie()
+        self.assertEqual(Poster.objects.count(), 1)
+        self.post_correct_movie()
+        self.assertEqual(Poster.objects.count(), 1)
+
     def test_doesnt_save_poster_on_invalid_input(self):
         self.post_invalid_input()
         self.assertEqual(Poster.objects.count(), 0)
@@ -72,6 +83,12 @@ class PosterTestCase(TestCase, PostMixin):
 
 
 class SearchHistoryTestCase(TestCase, PostMixin):
+
+    def test_render_history_on_correct_title(self):
+        response = self.client.get('/history/')
+
+        self.assertContains(response,
+                            'History of searches')
 
     def test_save_search_history_on_correct_input(self):
         self.post_correct_movie()

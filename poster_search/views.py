@@ -49,8 +49,8 @@ class PosterView(TemplateView):
                                              poster_url=img_url)
                 return self.render_to_response(context)
 
-            search = SearchHistory.objects. \
-                filter(search_title=img_title).first()
+            search = SearchHistory.objects.filter(
+                search_title=img_title).first()
 
             if search:
                 # We've looked for this title before
@@ -58,8 +58,8 @@ class PosterView(TemplateView):
                     # Poster_url on server is same as in our db
                     poster = Poster.objects.filter(poster_url=img_url).first()
                     context['poster'] = poster.image
-                    SearchHistory.objects.create(search_title=img_title,
-                                                 poster_url=img_url)
+                    # SearchHistory.objects.create(search_title=img_title,
+                    #                              poster_url=img_url)
                 else:
                     # Poster has changed - download new and delete the old file
                     context['poster'] = self.save_image(img_url,
@@ -69,7 +69,7 @@ class PosterView(TemplateView):
                 context['poster'] = self.save_image(img_url)
 
             SearchHistory.objects.create(search_title=img_title,
-                                                 poster_url=img_url)
+                                         poster_url=img_url)
         else:
             # Movie was not found on server
             SearchHistory.objects.create(search_title=img_title,
