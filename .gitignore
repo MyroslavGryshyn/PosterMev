@@ -62,3 +62,4 @@ target/
 Session.vim
 tags
 poster_search/static/posters/
+/media/

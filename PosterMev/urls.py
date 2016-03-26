@@ -13,14 +13,19 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url
+from django.conf.urls import url, patterns
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.views.generic import TemplateView
-from poster_search.views import PosterView
+from poster_search.views import PosterView, SearchHistoryView
+
+from django.conf import settings
+from django.conf.urls.static import static
+
+from .settings import MEDIA_ROOT
 
 urlpatterns = [
-    url(r'^$', TemplateView.as_view(template_name='index.html')),
+    url(r'^$', TemplateView.as_view(template_name='poster.html'), name='home'),
     url(r'^poster/$', PosterView.as_view(), name='poster'),
-]
-
-urlpatterns += staticfiles_urlpatterns()
+    url(r'^poster2/(?P<slug>[-\w\W]+)/$', PosterView.as_view(), name='poster2'),
+    url(r'^history/$', SearchHistoryView.as_view(), name='history'),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,20 +1,21 @@
 {% extends "base.html" %}
+{% block title %} Grab some poster! {% endblock title %}
 {% load staticfiles %}
-{% block poster %}
+{% block main %}
     </br>
     </br>
 <div class="col-lg-12">
     <div class="row text-center">
         {% if poster %}
-        <H3> Here is your poster! </H3>
-        </br>
-        <img src="{% static "posters/" %}{{ poster  }}">
-        {% else %}
-        <H3>We can't find any poster for this movie.
-            Please try again.
-        </H3>
+            <H3> Here is your poster! </H3>
+            </br>
+            <img src="{{MEDIA_URL}}{{ poster }}">
+        {% elif poster_is_na %}
+            <H3>Poster for your movie is not available. Try it for another one!</H3>
+        {% elif poster_is_nf %}
+            <H3>We can't find this movie.  Please try again. </H3>
         {% endif %}
         </br>
     </div>
 </div>
-{% endblock poster %}
+{% endblock main %}

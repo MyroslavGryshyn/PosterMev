@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Grab some posters!</title>
+    <title> {% block title %}{% endblock title %} </title>
 
     <meta name="description" content="Source code generated using layoutit.com">
     <meta name="author" content="LayoutIt!">
@@ -22,8 +22,9 @@
                     Grab your poster!
 				</h2>
 				<p>
-                    Just type the title of your favorite movie and you'll get
-                    it's most new poster.
+                Just <a href="{% url 'home' %}">type</a> the title of your favorite movie and you'll get
+                    it's most new poster. Or check
+                    <a href="{% url 'history' %}">history of search </a>
 				</p>
 			</div>
 			<form role="form" action="{% url 'poster' %}" method="post">
@@ -42,7 +43,7 @@
 		</div>
       </div>
 
-        {% block poster %}{% endblock poster %}
+        {% block main %}{% endblock main %}
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js"></script>
   </body>
