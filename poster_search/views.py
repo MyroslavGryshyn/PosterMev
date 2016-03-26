@@ -17,7 +17,7 @@ class PosterView(TemplateView):
     template_name = 'poster.html'
 
     @staticmethod
-    def save_image(img_url, context, img_title, poster_url=''):
+    def save_image(img_url, poster_url=''):
         if poster_url:
             poster = Poster.objects.filter(poster_url=poster_url).first()
             poster.image.delete()
@@ -29,8 +29,6 @@ class PosterView(TemplateView):
         poster.image.save(img_name, File(poster_image))
         poster.save()
 
-        SearchHistory.objects.create(search_title=img_title,
-                                     poster_url=img_url)
         return poster.image
 
     def post(self, request, *args, **kwargs):
@@ -64,12 +62,14 @@ class PosterView(TemplateView):
                                                  poster_url=img_url)
                 else:
                     # Poster has changed - download new and delete the old file
-                    context['poster'] = self.save_image(img_url, img_title,
+                    context['poster'] = self.save_image(img_url,
                                                         search.poster_url)
             else:
                 # Download poster for the first time
-                context['poster'] = self.save_image(img_url, context,
-                                                    img_title)
+                context['poster'] = self.save_image(img_url)
+
+            SearchHistory.objects.create(search_title=img_title,
+                                                 poster_url=img_url)
         else:
             # Movie was not found on server
             SearchHistory.objects.create(search_title=img_title,
